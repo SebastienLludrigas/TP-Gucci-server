@@ -3,20 +3,7 @@ const bcrypt = require('bcryptjs');
 const Habilite = require('../models/habilite');
 
 exports.signup = (req, res, next) => {
-   const name = req.body.name;
-   const password = req.body.password;
-   bcrypt
-      .hash(password, 12)
-      .then(result => {
-         console.log(result);
-         res.status(201).json(`The password hashed of the user ${name} is : ${result}`);
-      })
-      .catch(err => {
-         if (!err.statusCode) {
-            err.statusCode = 500;
-         }
-         next(err);
-      });
+
 };
 
 exports.login = async (req, res, next) => {
@@ -68,7 +55,8 @@ exports.login = async (req, res, next) => {
                      allReservedApplications,
                      dateDebutReservation,
                      dateFinReservation,
-                     commentsReservation
+                     commentsReservation,
+                     show: false
                   }
                )
                counter++
@@ -155,7 +143,7 @@ exports.persistLogin = async (req, res, next) => {
       if (find.rowCount === 0) {
          const error = new Error('Email invalide');
          error.statusCode = 401;
-         next(err);
+         next(error);
          // throw error;
       }
       loadedUser = find.rows[0];
@@ -184,7 +172,8 @@ exports.persistLogin = async (req, res, next) => {
                      allReservedApplications,
                      dateDebutReservation,
                      dateFinReservation,
-                     commentsReservation 
+                     commentsReservation,
+                     show: false 
                   }
                )
                if (i === reservations.rows.length - 1) {

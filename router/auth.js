@@ -1,14 +1,14 @@
 const express = require('express');
 const { body } = require('express-validator');
 
-const authController = require('../controllers/auth');
+const { signup, login, persistLogin } = require('../controllers/auth');
 const isAuth = require('../middleware/is-auth')
 
 const router = express.Router();
 
-router.post('/signup', authController.signup);
-router.post('/login', authController.login);
-router.post('/persistLogin', authController.persistLogin);
+router.post('/signup', signup);
+router.post('/login', login);
+router.post('/persistLogin', persistLogin);
 
 module.exports = router;
 

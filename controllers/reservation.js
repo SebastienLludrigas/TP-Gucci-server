@@ -132,7 +132,7 @@ exports.updateReservation = async (req, res, next) => {
     res.json(userReservations);
   } catch(err) {
     if (!err.statusCode) {
-        err.statusCode = 500;
+      err.statusCode = 500;
     }
     next(err);
   }
@@ -202,5 +202,85 @@ exports.deleteEntireReservation = async (req, res, next) => {
       err.statusCode = 500;
     }
     next(err);
+  }
+}
+
+exports.getResasAfterUpdate = async (req, res, next) => {
+  const id = req.userId
+
+  try {
+     const find = await Habilite.findById(id)
+     if (find.rowCount === 0) {
+        const error = new Error('id invalide');
+        error.statusCode = 401;
+        next(err);
+        // throw error;
+     }
+     loadedUser = find.rows[0];
+
+     const reservations = await Habilite.allUserReservations(id)
+     const userReservations = [];
+     const nbRows = reservations.rowCount
+     // let counter = 0;
+
+     if (nbRows > 0) {
+        for (let i = 0; i < reservations.rows.length; i++) {
+           try {
+              const all = await Habilite.allUserApplicationReservedByIdReservation(reservations.rows[i].id_reservation)
+                 
+              const intituleReservation = reservations.rows[i].intitule
+              const idReservation = reservations.rows[i].id_reservation
+              const dateDebutReservation = reservations.rows[i].date_debut
+              const dateFinReservation = reservations.rows[i].date_fin
+              const commentsReservation = reservations.rows[i].comments
+              const allReservedApplications = all.rows
+                 
+              userReservations.push(
+                 { 
+                    intituleReservation, 
+                    idReservation, 
+                    allReservedApplications,
+                    dateDebutReservation,
+                    dateFinReservation,
+                    commentsReservation,
+                    show: false 
+                 }
+              )
+              if (i === reservations.rows.length - 1) {
+                 res.status(200).json(
+                    {  
+                       loadedUser,
+                       infosReservations: userReservations
+                    }
+                 );
+              }
+           } catch (err) {
+              if (!err.statusCode) {
+                 err.statusCode = 500;
+              }
+              next(err);
+           }
+        }
+     } else {
+        try {
+           res.status(200).json(
+              { 
+                 loadedUser: loadedUser,
+                 infosReservations: null
+              }
+           );
+        } catch(err) {
+           if (!err.statusCode) {
+              err.statusCode = 500;
+           }
+           next(err);
+        }
+     }
+
+  } catch (err) {
+     if (!err.statusCode) {
+        err.statusCode = 500;
+     }
+     next(err);
   }
 }

@@ -64,11 +64,10 @@ exports.getApplications = (req,res,next) => {
          // console.log(applications);
       })
       .catch(err => {
-         // Ici c'est toujours le même système de renvoi d'erreur au middleware de gestion des erreurs dans app.js qui est utilisé
-         if (!err.statusCode) {
-         err.statusCode = 500;
-         }
-         next(err);
+        if (!err.statusCode) {
+        err.statusCode = 500;
+        }
+        next(err);
       });
 }
 

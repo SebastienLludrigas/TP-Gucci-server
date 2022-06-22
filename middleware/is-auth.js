@@ -6,7 +6,8 @@ module.exports = (req, res, next) => {
     const error = new Error('Not authenticated.');
     error.statusCode = 500;
     throw error;
-  }
+  };
+
   const token = authHeader.split(' ')[1];
   let decodedToken;
   try {
@@ -17,7 +18,8 @@ module.exports = (req, res, next) => {
       err.message = 'Votre token a expiré, veuillez vous reconnecter'
     }
     next(err);
-  }
+  };
+
   if (!decodedToken) {
     const error = new Error();
     error.statusCode = 500;

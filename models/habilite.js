@@ -1,14 +1,15 @@
 const db = require('../utils/database');
 
 module.exports = class Habilite {
-  constructor(id_habilite, nom, fonction, telephone, email, login, password) {
+  constructor(id_habilite, nom, fonction, telephone, email, password, role, status) {
     this.id_habilite = id_habilite;
     this.nom = nom;
     this.fonction = fonction;
     this.telephone = telephone;
     this.email = email;
-    this.login = login;
     this.password = password;
+    this.role = role;
+    this.status = status;
   }
 
   static fetchAll() {
@@ -46,6 +47,23 @@ module.exports = class Habilite {
       WHERE cpar.id_reservation = $1
       `,
       [id]
+    );
+  }
+
+  createUser() {
+    return db.query
+    (`
+      INSERT INTO habilite(nom, fonction, telephone, email, password, role, status)
+      VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [
+        this.nom,
+        this.fonction,
+        this.telephone,
+        this.email,
+        this.password,
+        this.role,
+        this.status
+      ]
     );
   }
 };

@@ -84,7 +84,7 @@ module.exports = class Reservation {
     return db.query
     (`
       SELECT coPlAppRe.id_couloir, coPlAppRe.id_plateforme, coPlAppRe.id_application, co.nom "nomCouloir", pl.nom "nomPlateforme", app.nom "nomApplication",
-      re.id_reservation, re.intitule, re.comments, re.date_debut, re.date_fin, re.name, re.fonction, re.telephone, re.email,
+      re.id_reservation, re.intitule, re.id_habilite, re.comments, re.date_debut, re.date_fin, re.name, re.fonction, re.telephone, re.email,
       (re.date_fin::date - re.date_debut::date)::int + 1 "nbJoursReservation" 
       FROM reservation re
       INNER JOIN couloir_plateforme_application_reservation coPlAppRe
